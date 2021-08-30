@@ -22,10 +22,18 @@ class Login
             String email = request.getParameter("email");
             String token = request.getParameter("password");
 
-            String sql = "select * from users where (email ='" + email +"' and password ='" + token + "')";
+            //String sql = "select * from users where (email ='" + email +"' and password ='" + token + "')";
+            String sql = "select * from users where email = ? and password = ? ";
 
+            
             Connection connection = pool.getConnection();
-            Statement statement = connection.createStatement();
+            //Statement statement = connection.createStatement();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+
+            ResultSet result = preparedStatement.executeQuery();
             
             HttpSession session = request.getSession();
             String role = (String)session.getAttribute("role");
